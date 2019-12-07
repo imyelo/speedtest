@@ -1,4 +1,5 @@
 const { send } = require('micro')
+const cors = require('micro-cors')()
 
 const routes = [
   ['GET', '/download', require('./download')],
@@ -7,7 +8,7 @@ const routes = [
 
 const notfound = (req, res) => send(res, 404, 'not found')
 
-module.exports = async (req, res) => {
+module.exports = cors(async (req, res) => {
   for (let i = 0; i < routes.length; i++) {
     let [ method, url, fn ] = routes[i]
     if (req.method === method && req.url === url) {
@@ -15,4 +16,4 @@ module.exports = async (req, res) => {
     }
   }
   return notfound(req, res)
-}
+})
