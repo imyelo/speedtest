@@ -1,0 +1,18 @@
+{
+  "name": "speedtest-ui",
+  "private": true,
+  "scripts": {
+    "build": "poi --prod",
+    "dev": "poi --serve"
+  },
+  "devDependencies": {
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "poi": "^12.4.2",
+    "react-hot-loader": "^4.12.18"
+  },
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}

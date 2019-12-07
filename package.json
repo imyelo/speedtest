@@ -24,6 +24,7 @@
   "homepage": "https://github.com/imyelo/speedtest#readme",
   "devDependencies": {
     "ava": "^2.1.0",
+    "lerna": "^3.19.0",
     "lint-staged": "^8.2.1",
     "np": "^5.0.3",
     "prettier": "^1.18.2"
