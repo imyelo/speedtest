@@ -3,8 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "description": "",
+  "main": "src",
   "files": [
-    "lib"
+    "src"
   ],
   "repository": {
     "url": "imyelo/speedtest",
@@ -26,5 +27,10 @@
     "lint-staged": "^8.2.1",
     "np": "^5.0.3",
     "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "micro": "^9.3.4",
+    "noop-stream": "^0.1.0",
+    "serve-handler": "^6.1.2"
   }
 }
