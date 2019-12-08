@@ -2,6 +2,7 @@ const { send } = require('micro')
 const cors = require('micro-cors')()
 
 const routes = [
+  ['GET', '/ping', require('./ping')],
   ['GET', '/download', require('./download')],
   ['POST', '/upload', require('./upload')],
 ]
