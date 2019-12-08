@@ -5,7 +5,7 @@ import bus from './common/bus'
 import Timing from './common/timing'
 
 const PING_RESPONSE_TIMEOUT = 5 * 1000 // 5s
-const PING_TIME = 10
+const PING_TIME = 8
 
 const PING_ENDPOING = 'http://localhost:3001/ping'
 
@@ -14,19 +14,12 @@ const TIMING_MARKS = keymirror({
   RESPONSE: null,
 })
 
-const STEPS = {
-  REQUESTING: 'requesting ...',
-}
-
 function usePing () {
-  const [step, setStep] = useState(null)
-
   const request = async () => {
     let timing = new Timing()
     try {
       const controller = new AbortController()
       timing.mark(TIMING_MARKS.REQUEST)
-      setStep(STEPS.REQUESTING)
       await pTimeout(fetch(PING_ENDPOING, {
         signal: controller.signal,
       }), PING_RESPONSE_TIMEOUT, () => controller.abort())
@@ -57,13 +50,12 @@ function usePing () {
   }
 
   return {
-    step,
     ping,
   }
 }
 
 const Ping = () => {
-  const { step, ping } = usePing()
+  const { ping } = usePing()
 
   useEffect(() => {
     ;(async () => {
@@ -75,7 +67,6 @@ const Ping = () => {
   return (
     <div className="ping">
       <h3>Testing Ping ...</h3>
-      <p>{ step }</p>
     </div>
   )
 }

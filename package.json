@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "debug": "^4.1.1",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "noop-stream": "^0.1.0",

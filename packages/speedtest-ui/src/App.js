@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import bus from './common/bus'
 import Ping from './Ping'
 import Download from './Download'
+import Upload from './Upload'
 import './App.less'
 
 const STEPS = keymirror({
@@ -15,23 +16,29 @@ const STEPS = keymirror({
 
 const App = () => {
   const [step, setStep] = useState(STEPS.READY)
+  const [pingDuration, setPingDuration] = useState(null)
   const [downloadSpeed, setDownloadSpeed] = useState(null)
+  const [uploadSpeed, setUploadSpeed] = useState(null)
 
   const onClick = async () => {
+    setPingDuration(null)
     setDownloadSpeed(null)
-    setStep(STEPS.PING)
+    setUploadSpeed(null)
+    setStep(STEPS.UPLOAD)
   }
 
   useEffect(() => {
     bus.on('result:ping', (data) => {
       setStep(STEPS.DOWNLOAD)
-      console.log(data)
-      // setDownloadSpeed(data.speed)
+      setPingDuration(data.duration)
     })
     bus.on('result:download', (data) => {
-      setStep(STEPS.READY)
-      console.log(data)
+      setStep(STEPS.UPLOAD)
       setDownloadSpeed(data.speed)
+    })
+    bus.on('result:upload', (data) => {
+      setStep(STEPS.READY)
+      setUploadSpeed(data.speed)
     })
   }, [])
 
@@ -53,7 +60,9 @@ const App = () => {
                   ? <Ping />
                   : step === STEPS.DOWNLOAD
                     ? <Download />
-                    : null
+                    : step === STEPS.UPLOAD
+                      ? <Upload />
+                      : null
               }
             </div>
           : null

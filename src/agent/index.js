@@ -10,6 +10,9 @@ const routes = [
 const notfound = (req, res) => send(res, 404, 'not found')
 
 module.exports = cors(async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    return send(res, 200, 'OK')
+  }
   for (let i = 0; i < routes.length; i++) {
     let [ method, url, fn ] = routes[i]
     if (req.method === method && req.url === url) {

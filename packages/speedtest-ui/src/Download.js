@@ -21,8 +21,6 @@ const STEPS = {
 }
 
 function useDownload () {
-  const [step, setStep] = useState(null)
-
   const download = async () => {
     let timing = new Timing()
     let content = []
@@ -42,12 +40,10 @@ function useDownload () {
       const controller = new AbortController()
       const signal = controller.signal
       timing.mark(TIMING_MARKS.REQUEST)
-      setStep(STEPS.REQUESTING)
       const response = await pTimeout(fetch(DOWNLOAD_ENDPOING, {
         signal,
       }), DOWNLOAD_RESPONSE_TIMEOUT, () => controller.abort())
       timing.mark(TIMING_MARKS.RESPONSE)
-      setStep(STEPS.FETCHING)
       await pTimeout(receive(response.body.getReader()), DOWNLOAD_CONTENT_TIMEOUT, () => controller.abort())
     } catch (error) {
       console.error(error)
@@ -57,7 +53,6 @@ function useDownload () {
     const size = content.reduce((memo, bytes) => memo + bytes.byteLength, 0)
     const duration = timing.duration(TIMING_MARKS.RESPONSE, TIMING_MARKS.CONTENT)
     const speed = size / (duration / 1000) // bytes/s
-    setStep(null)
     if (!size) {
       return {
         size: null,
@@ -73,13 +68,12 @@ function useDownload () {
   }
 
   return {
-    step,
     download,
   }
 }
 
 const Download = () => {
-  const { step, download } = useDownload()
+  const { download } = useDownload()
 
   useEffect(() => {
     ;(async () => {
@@ -91,7 +85,6 @@ const Download = () => {
   return (
     <div className="download">
       <h3>Downloading ...</h3>
-      <p>{ step }</p>
     </div>
   )
 }
