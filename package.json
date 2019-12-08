@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "description": "",
-  "main": "src",
-  "files": [
-    "src"
-  ],
+  "main": "src/index.js",
+  "bin": {
+    "speedtest": "src/index.js"
+  },
   "repository": {
     "url": "imyelo/speedtest",
     "type": "git"
@@ -14,7 +14,10 @@
   "scripts": {
     "precommit": "lint-staged",
     "test": "ava test/*.js",
-    "release": "np"
+    "clean": "rimraf dist",
+    "build:ui": "cd packages/speedtest-ui && npm run build",
+    "build:pkg": "run-s clean && pkg . --out-path ./dist",
+    "build": "run-s build:ui build:pkg"
   },
   "author": "yelo",
   "license": "Apache-2.0",
@@ -26,13 +29,19 @@
     "ava": "^2.1.0",
     "lerna": "^3.19.0",
     "lint-staged": "^8.2.1",
-    "np": "^5.0.3",
-    "prettier": "^1.18.2"
+    "npm-run-all": "^4.1.5",
+    "pkg": "^4.4.1",
+    "prettier": "^1.18.2",
+    "rimraf": "^3.0.0"
   },
   "dependencies": {
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "noop-stream": "^0.1.0",
     "serve-handler": "^6.1.2"
+  },
+  "pkg": {
+    "scripts": "src/**/*.js",
+    "assets": "packages/speedtest-ui/dist/**/*"
   }
 }
