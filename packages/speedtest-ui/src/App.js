@@ -1,91 +1,40 @@
-import React, { useState } from 'react'
-import keymirror from 'keymirror'
-import pTimeout from 'p-timeout'
-import prettyBytes from 'pretty-bytes'
+import React, { useState, useEffect } from 'react'
+import classnames from 'classnames'
+import bus from './common/bus'
+import Download from './Download'
 import './App.less'
-
-const DOWNLOAD_RESPONSE_TIMEOUT = 5 * 1000 // 5s
-const DOWNLOAD_CONTENT_TIMEOUT = 20 * 1000 // 20s
-
-const DOWNLOAD_ENDPOING = 'http://localhost:3001/download'
-
-const TIMING_MARKS = keymirror({
-  REQUEST: null,
-  RESPONSE: null,
-  CONTENT: null,
-})
-
-const STEPS = {
-  REQUESTING: '[1/3] requesting ...',
-  FETCHING: '[2/3] fetching content ...',
-}
-
-class Timing {
-  constructor () {
-    this.marks = new Map()
-  }
-  mark (name) {
-    this.marks.set(name, performance ? performance.now() : Date.now())
-  }
-  duration (start, end) {
-    return this.marks.get(end) - this.marks.get(start)
-  }
-}
 
 const App = () => {
   const [isTesting, setIsTesting] = useState(false)
-  const [step, setStep] = useState(null)
+  const [downloadSpeed, setDownloadSpeed] = useState(null)
 
   const onClick = async () => {
+    setDownloadSpeed(null)
     setIsTesting(true)
-    let timing = new Timing()
-    let content = []
-    const receive = async (reader) => {
-      const next = async () => {
-        let { done, value } = await reader.read()
-        if (done) {
-          return
-        }
-        content.push(value)
-        await next()
-      }
-      await next()
-    }
-
-    try {
-      const controller = new AbortController()
-      const signal = controller.signal
-      timing.mark(TIMING_MARKS.REQUEST)
-      setStep(STEPS.REQUESTING)
-      const response = await pTimeout(fetch(DOWNLOAD_ENDPOING, {
-        signal,
-      }), DOWNLOAD_RESPONSE_TIMEOUT, () => controller.abort())
-      timing.mark(TIMING_MARKS.RESPONSE)
-      setStep(STEPS.FETCHING)
-      await pTimeout(receive(response.body.getReader()), DOWNLOAD_CONTENT_TIMEOUT, () => controller.abort())
-    } catch (error) {
-      console.error(error)
-    } finally {
-      timing.mark(TIMING_MARKS.CONTENT)
-    }
-    const size = content.reduce((memo, bytes) => memo + bytes.byteLength, 0)
-    const duration = timing.duration(TIMING_MARKS.RESPONSE, TIMING_MARKS.CONTENT)
-    const speed = size / (duration / 1000) // bytes/s
-    if (!size) {
-      console.log('failed')
-    } else {
-      console.log(size, duration, speed, `${prettyBytes(speed)}/s`)
-    }
-    setIsTesting(false)
-    setStep(null)
   }
 
+  useEffect(() => {
+    bus.on('result:download', (data) => {
+      setIsTesting(false)
+      setDownloadSpeed(data.speed)
+    })
+  }, [])
+
   return (
-    <div className="app">
-      <h1>Speed Test</h1>
-      <button className="primary-button" onClick={onClick} disabled={isTesting}>
-        { isTesting ? step : 'Start' }
-      </button>
+    <div className={classnames('screen', { testing: isTesting })}>
+      <div className="control">
+        <h1>Speed Test</h1>
+        <button className="primary-button" onClick={onClick} disabled={isTesting}>
+          { isTesting ? 'Testing...' : 'Start' }
+        </button>
+      </div>
+      {
+        isTesting
+          ? <div className="status">
+              <Download />
+            </div>
+          : null
+      }
     </div>
   )
 }
