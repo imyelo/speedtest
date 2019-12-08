@@ -3,7 +3,6 @@ import keymirror from 'keymirror'
 import pTimeout from 'p-timeout'
 import bus from './common/bus'
 import Timing from './common/timing'
-import { prettySpeed } from './common/pretty'
 
 const DOWNLOAD_RESPONSE_TIMEOUT = 5 * 1000 // 5s
 const DOWNLOAD_CONTENT_TIMEOUT = 20 * 1000 // 20s
@@ -58,12 +57,14 @@ function useDownload () {
     const size = content.reduce((memo, bytes) => memo + bytes.byteLength, 0)
     const duration = timing.duration(TIMING_MARKS.RESPONSE, TIMING_MARKS.CONTENT)
     const speed = size / (duration / 1000) // bytes/s
-    if (!size) {
-      console.log('failed')
-    } else {
-      console.log(size, duration, speed, prettySpeed(speed))
-    }
     setStep(null)
+    if (!size) {
+      return {
+        size: null,
+        duration: null,
+        speed: null,
+      }
+    }
     return {
       size,
       duration,
