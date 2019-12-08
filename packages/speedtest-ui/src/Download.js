@@ -85,7 +85,7 @@ const Download = () => {
 
   return (
     <div className="download">
-      <h3>Downloading ...</h3>
+      <h3>Testing Download Speed ...</h3>
     </div>
   )
 }

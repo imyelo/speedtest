@@ -82,7 +82,7 @@ const Upload = () => {
 
   return (
     <div className="upload">
-      <h3>Uploading ...</h3>
+      <h3>Testing Upload Speed ...</h3>
     </div>
   )
 }

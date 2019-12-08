@@ -1,4 +1,5 @@
 import React from 'react'
+import Animate from 'rc-animate'
 import classnames from 'classnames'
 import Ping from './Ping'
 import Download from './Download'
@@ -16,33 +17,37 @@ const App = () => {
 
   const isTesting = step !== STEPS.READY
 
-  return step !== STEPS.FINISH
-    ? (
-      <div className={classnames('screen', { testing: isTesting })}>
-        <div className="control">
-          <h1>Speed Test</h1>
-          <button className="primary-button" onClick={onClick} disabled={isTesting}>
-            { isTesting ? 'Testing...' : 'Start' }
-          </button>
+  return <Animate transitionName="transition-view">
+    {
+      step !== STEPS.FINISH
+      ? (
+        <div className={classnames('screen', { testing: isTesting })} key="control">
+          <div className="control">
+            <h1>Speed Test</h1>
+            <button className="primary-button" onClick={onClick} disabled={isTesting}>
+              { isTesting ? 'Testing...' : 'Start' }
+            </button>
+          </div>
+          {
+            isTesting
+              ? <div className="status">
+                  {
+                    step === STEPS.PING
+                      ? <Ping />
+                      : step === STEPS.DOWNLOAD
+                        ? <Download />
+                        : step === STEPS.UPLOAD
+                          ? <Upload />
+                          : null
+                  }
+                </div>
+              : null
+          }
         </div>
-        {
-          isTesting
-            ? <div className="status">
-                {
-                  step === STEPS.PING
-                    ? <Ping />
-                    : step === STEPS.DOWNLOAD
-                      ? <Download />
-                      : step === STEPS.UPLOAD
-                        ? <Upload />
-                        : null
-                }
-              </div>
-            : null
-        }
-      </div>
-    )
-    : <Result />
+      )
+      : <Result key="result" />
+    }
+  </Animate>
 }
 
 const AppWithContext = () => (

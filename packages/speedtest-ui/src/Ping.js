@@ -67,7 +67,7 @@ const Ping = () => {
 
   return (
     <div className="ping">
-      <h3>Testing Ping ...</h3>
+      <h3>Testing Ping Speed ...</h3>
     </div>
   )
 }
