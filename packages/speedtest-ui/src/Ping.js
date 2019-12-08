@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import keymirror from 'keymirror'
 import pTimeout from 'p-timeout'
-import bus from './common/bus'
 import Timing from './common/timing'
+import { useContextReducer } from './reducer'
 
 const PING_RESPONSE_TIMEOUT = 5 * 1000 // 5s
 const PING_TIME = 8
@@ -55,12 +55,13 @@ function usePing () {
 }
 
 const Ping = () => {
+  const [ , dispatch ] = useContextReducer()
   const { ping } = usePing()
 
   useEffect(() => {
     ;(async () => {
       let result = await ping()
-      bus.emit('result:ping', result)
+      dispatch({ type: 'setPing', value: result.duration })
     })()
   }, [])
 

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import keymirror from 'keymirror'
 import Debug from 'debug'
-import bus from './common/bus'
 import Timing from './common/timing'
+import { useContextReducer } from './reducer'
 
 const debug = Debug('speedtest:upload')
 
-const UPLOAD_SIZE = 50 * 1024 * 1024 // 50mb
-const UPLOAD_TIMEOUT = 30 * 1000 // 20s
+const UPLOAD_SIZE = 20 * 1024 * 1024 // 50mb
+const UPLOAD_TIMEOUT = 20 * 1000 // 20s
 
 const UPLOAD_ENDPOING = 'http://localhost:3001/upload'
 
@@ -70,12 +70,13 @@ function useUpload () {
 }
 
 const Upload = () => {
+  const [ , dispatch ] = useContextReducer()
   const { upload } = useUpload()
 
   useEffect(() => {
     ;(async () => {
       let result = await upload()
-      bus.emit('result:upload', result)
+      dispatch({ type: 'setUpload', value: result.speed })
     })()
   }, [])
 

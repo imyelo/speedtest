@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import keymirror from 'keymirror'
 import pTimeout from 'p-timeout'
-import bus from './common/bus'
 import Timing from './common/timing'
+import { useContextReducer } from './reducer'
 
 const DOWNLOAD_RESPONSE_TIMEOUT = 5 * 1000 // 5s
 const DOWNLOAD_CONTENT_TIMEOUT = 20 * 1000 // 20s
@@ -73,12 +73,13 @@ function useDownload () {
 }
 
 const Download = () => {
+  const [ , dispatch ] = useContextReducer()
   const { download } = useDownload()
 
   useEffect(() => {
     ;(async () => {
       let result = await download()
-      bus.emit('result:download', result)
+      dispatch({ type: 'setDownload', value: result.speed })
     })()
   }, [])
 
