@@ -1,3 +1,3 @@
-import prettyBytes from 'pretty-bytes'
+import mbps from 'mbps'
 
-export const prettySpeed = (speed) => speed && `${prettyBytes(speed)}/s`
+export const prettySpeed = (speed) => speed && mbps(speed, 1)
