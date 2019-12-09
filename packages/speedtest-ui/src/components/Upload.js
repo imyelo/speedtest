@@ -20,11 +20,12 @@ const TIMING_MARKS = keymirror({
 const post = async ({ url, body, timeout, onProgress }) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url)
     xhr.onload = (event) => resolve(event)
     xhr.onerror = (error) => reject(error)
+    xhr.ontimeout = (event) => reject(new Error('timeout'))
     xhr.upload.onprogress = onProgress
     xhr.timeout = timeout
+    xhr.open('POST', url)
     xhr.send(body)
   })
 }
