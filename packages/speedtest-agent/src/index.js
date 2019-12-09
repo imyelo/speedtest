@@ -1,11 +1,11 @@
 const micro = require('micro')
 const publicIp = require('public-ip')
-const static = require('./static')
+const client = require('./client')
 const agent = require('./agent')
 
 const DEFAULT_PUBLIC_IP = '127.0.0.1'
 const DEFAULT_AGENT_PORT = 3001
-const DEFAULT_PUBLIC_PORT = 3000
+const DEFAULT_CLIENT_PORT = 3000
 
 const getMeta = async () => {
   let ip
@@ -22,24 +22,29 @@ const getMeta = async () => {
   const meta = {
     ip,
     agentPort: DEFAULT_AGENT_PORT,
-    publicPort: DEFAULT_PUBLIC_PORT
+    clientPort: DEFAULT_CLIENT_PORT,
   }
   return meta
 }
 
-;(async () => {
+const launch = async () => {
   const meta = await getMeta()
 
-  const staticServer = micro(static(meta))
+  const clientServer = micro(client(meta))
   const agentServer = micro(agent(meta))
 
-  staticServer.listen(DEFAULT_PUBLIC_PORT, () => {
-    const address = staticServer.address()
-    console.log(`Static server is listening on ${address.port}.`)
+  clientServer.listen(DEFAULT_CLIENT_PORT, () => {
+    const address = clientServer.address()
+    console.log(`Client server is listening on ${address.port}.`)
   })
   agentServer.listen(DEFAULT_AGENT_PORT, () => {
     const address = agentServer.address()
     console.log(`Agent server is listening on ${address.port}.`)
   })
+}
 
-})()
+module.exports = launch
+
+if (!module.parent) {
+  launch()
+}
