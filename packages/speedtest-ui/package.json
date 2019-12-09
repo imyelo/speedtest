@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "poi --prod",
-    "dev": "poi --serve"
+    "start": "poi --serve"
   },
   "devDependencies": {
     "less": "^3.10.3",
