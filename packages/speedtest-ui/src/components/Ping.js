@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import { useContextReducer } from '../store/reducer'
-import ping from '../apis/ping'
+import ApiWorker from 'worker-loader!../workers/ApiWorker'
 
 const Ping = () => {
   const [ state, dispatch ] = useContextReducer()
 
   useEffect(() => {
-    ;(async () => {
-      let result = await ping({ host: state.host })
-      dispatch({ type: 'setPing', value: result.duration })
-    })()
+    const worker = new ApiWorker()
+    worker.addEventListener('message', ({ data }) => {
+      dispatch({ type: 'setPing', value: data.payload.duration })
+      worker.terminate()
+    })
+    worker.postMessage({ api: 'ping', payload: { host: state.host } })
   }, [])
 
   return (

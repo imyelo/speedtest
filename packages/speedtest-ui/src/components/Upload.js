@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import { useContextReducer } from '../store/reducer'
-import upload from '../apis/upload'
+import ApiWorker from 'worker-loader!../workers/ApiWorker'
 
 const Upload = () => {
   const [ state, dispatch ] = useContextReducer()
 
   useEffect(() => {
-    ;(async () => {
-      let result = await upload({ host: state.host })
-      dispatch({ type: 'setUpload', value: result.speed })
-    })()
+    const worker = new ApiWorker()
+    worker.addEventListener('message', ({ data }) => {
+      dispatch({ type: 'setUpload', value: data.payload.speed })
+      worker.terminate()
+    })
+    worker.postMessage({ api: 'upload', payload: { host: state.host } })
   }, [])
 
   return (

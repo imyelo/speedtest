@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import { useContextReducer } from '../store/reducer'
-import download from '../apis/download'
+import ApiWorker from 'worker-loader!../workers/ApiWorker'
 
 const Download = () => {
   const [ state, dispatch ] = useContextReducer()
 
   useEffect(() => {
-    ;(async () => {
-      let result = await download({ host: state.host })
-      dispatch({ type: 'setDownload', value: result.speed })
-    })()
+    const worker = new ApiWorker()
+    worker.addEventListener('message', ({ data }) => {
+      dispatch({ type: 'setDownload', value: data.payload.speed })
+      worker.terminate()
+    })
+    worker.postMessage({ api: 'download', payload: { host: state.host } })
   }, [])
 
   return (

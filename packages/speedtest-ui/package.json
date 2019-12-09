@@ -20,7 +20,8 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "poi": "^12.4.2",
-    "react-hot-loader": "^4.12.18"
+    "react-hot-loader": "^4.12.18",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "classnames": "^2.2.6",
