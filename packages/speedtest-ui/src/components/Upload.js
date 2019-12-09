@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import keymirror from 'keymirror'
 import Debug from 'debug'
 import olt from 'olt'
-import Timing from './common/timing'
-import { useContextReducer } from './reducer'
+import Timing from '../common/timing'
+import { useContextReducer } from '../store/reducer'
 
 const debug = Debug('speedtest:upload')
 

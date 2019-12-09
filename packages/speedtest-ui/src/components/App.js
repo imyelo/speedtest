@@ -1,12 +1,12 @@
 import React from 'react'
 import Animate from 'rc-animate'
 import classnames from 'classnames'
+import { useContextReducer, ReducerProvider } from '../store/reducer'
+import { STEPS } from '../constants'
 import Ping from './Ping'
 import Download from './Download'
 import Upload from './Upload'
 import Result from './Result'
-import { useContextReducer, ReducerProvider } from './reducer'
-import { STEPS } from './constants'
 import './App.less'
 
 const App = () => {

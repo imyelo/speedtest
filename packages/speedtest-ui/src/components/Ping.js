@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import keymirror from 'keymirror'
 import pTimeout from 'p-timeout'
 import olt from 'olt'
-import Timing from './common/timing'
-import { useContextReducer } from './reducer'
+import Timing from '../common/timing'
+import { useContextReducer } from '../store/reducer'
 
 const PING_RESPONSE_TIMEOUT = 5 * 1000 // 5s
 const PING_TIME = 8

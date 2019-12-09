@@ -1,6 +1,6 @@
 import React from 'react'
-import { prettyDuration, prettySpeed } from './common/pretty'
-import { useContextReducer } from './reducer'
+import { prettyDuration, prettySpeed } from '../common/pretty'
+import { useContextReducer } from '../store/reducer'
 
 const Result = () => {
   const [ state, dispatch ] = useContextReducer()

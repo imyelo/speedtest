@@ -1,9 +1,9 @@
 import { createContext, useReducer, useContext } from 'react'
-import { STEPS } from './constants'
+import { STEPS } from '../constants'
 
 const initialState = {
   step: STEPS.READY,
-  host: '',
+  host: '127.0.0.1:3001',
   ping: null,
   download: null,
   upload: null,
