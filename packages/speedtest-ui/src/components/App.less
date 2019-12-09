@@ -131,12 +131,14 @@
   }
 }
 
-.transition-view-enter, .transition-view-appear, .transition-view-leave-active {
+.transition-view-enter {
   opacity: 0;
-  transition: all 800ms ease;
-}
-.transition-view-enter-active, .transition-view-appear-active, .transition-view-leave {
-  opacity: 1;
+  transform: translateY(10px);
+  &.transition-view-enter-active {
+    opacity: 1;
+    transform: none;
+    transition: all 800ms ease;
+  }
 }
 
 .transition-error-enter {
@@ -148,7 +150,6 @@
     transition: all 400ms ease;
   }
 }
-
 .transition-error-leave {
   opacity: 1;
   transform: none;
