@@ -4,12 +4,13 @@
 ## Agent
 ### Install
 ```bash
-$ curl -L https://github.com/imyelo/speedtest/releases/download/v0.1.0/speedtest-agent-linux > speedtest
+curl -L https://github.com/imyelo/speedtest/releases/download/v0.1.0/speedtest-agent-linux > speedtest
+chmod +x ./speedtest
 ```
 
 ### Usage
 ```bash
-$ ./speedtest
+./speedtest
 ```
 
 ### Options
