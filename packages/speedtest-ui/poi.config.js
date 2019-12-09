@@ -2,7 +2,7 @@ module.exports = {
   entry: 'src/index',
   output: {
     html: {
-      title: 'Speedtest',
+      title: 'Speed Test',
     },
   },
   plugins: [],

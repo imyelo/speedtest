@@ -8,6 +8,7 @@
     "speedtest": "src/index.js"
   },
   "scripts": {
+    "start": "node .",
     "test": "ava test/*.js"
   },
   "author": "yelo",

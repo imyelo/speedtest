@@ -2,7 +2,7 @@ import React from 'react'
 import Animate from 'rc-animate'
 import classnames from 'classnames'
 import { useContextReducer, ReducerProvider } from '../store/reducer'
-import { STEPS } from '../constants'
+import { PROJECT_URL, AUTHOR_URL, STEPS } from '../constants'
 import Ping from './Ping'
 import Download from './Download'
 import Upload from './Upload'
@@ -31,7 +31,12 @@ const App = () => {
       ? (
         <div className={classnames('screen', { testing: isTesting })} key="control">
           <div className="control">
-            <h1>Speed Test</h1>
+            <h1>
+              <a href={PROJECT_URL} target="_blank">Speed Test</a>
+              <a className="author" href={AUTHOR_URL} target="_blank">
+                &copy;yelo
+              </a>
+            </h1>
             <form className="form" onSubmit={onSubmit}>
               <input
                 className="host"
