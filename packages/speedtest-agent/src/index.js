@@ -29,13 +29,15 @@ const getMeta = async (options) => {
 const launch = async (options) => {
   const meta = await getMeta(options)
 
-  const clientServer = micro(client(meta))
-  const agentServer = micro(agent(meta))
+  if (!options.get('agentOnly')) {
+    const clientServer = micro(client(meta))
+    clientServer.listen(options.get('clientPort'), () => {
+      const address = clientServer.address()
+      console.log(`Client server is listening on ${address.port}.`)
+    })
+  }
 
-  clientServer.listen(options.get('clientPort'), () => {
-    const address = clientServer.address()
-    console.log(`Client server is listening on ${address.port}.`)
-  })
+  const agentServer = micro(agent(meta))
   agentServer.listen(options.get('agentPort'), () => {
     const address = agentServer.address()
     console.log(`Agent server is listening on ${address.port}.`)
