@@ -9,8 +9,8 @@ import Upload from './Upload'
 import Result from './Result'
 import './App.less'
 
-const useAppForm = () => {
-  const [ host, setHost ] = useState('')
+const useAppForm = (defaultValue) => {
+  const [ host, setHost ] = useState(defaultValue.host || '')
 
   useEffect(() => {
     ;(async () => {
@@ -35,7 +35,7 @@ const useAppForm = () => {
 const App = () => {
   const [ state, dispatch ] = useContextReducer()
   const { step } = state
-  const [ [ host, setHost ]] = useAppForm()
+  const [ [ host, setHost ]] = useAppForm({ host: state.host })
 
   const onChangeHost = (event) =>
     setHost(event.target.value)

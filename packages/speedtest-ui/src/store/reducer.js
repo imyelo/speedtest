@@ -1,9 +1,10 @@
 import { createContext, useReducer, useContext } from 'react'
-import { STEPS } from '../constants'
+import cache from 'yields-store'
+import { CACHE_KEYS, STEPS } from '../constants'
 
 const initialState = {
   step: STEPS.READY,
-  host: '',
+  host: cache(CACHE_KEYS.HOST),
   ping: null,
   download: null,
   upload: null,
@@ -11,62 +12,63 @@ const initialState = {
 }
 
 const reducer = (state, action) => {
-  const fail = (message) => ({
+  const patch = (obj) => ({
     ...state,
+    ...obj,
+  })
+  const fail = (message) => patch({
     error: message,
     step: STEPS.READY,
   })
 
   switch (action.type) {
     case 'ready': {
-      return {
-        ...state,
+      return patch({
         step: STEPS.READY,
-      }
+      })
     }
     case 'start': {
-      return {
-        ...state,
+      if (!action.host) {
+        return fail('Please enter your agent\'s address.')
+      }
+      cache(CACHE_KEYS.HOST, action.host)
+      return patch({
         error: null,
         host: action.host,
         step: STEPS.PING,
-      }
+      })
     }
     case 'setHost': {
-      return {
-        ...state,
+      return patch({
         ping: action.value,
-      }
+      })
     }
     case 'setPing': {
       if (!action.value) {
         return fail('Unable to connect to the server.')
       }
-      return {
-        ...state,
+      return patch({
         ping: action.value,
         step: STEPS.DOWNLOAD,
-      }
+      })
     }
     case 'setDownload': {
       if (!action.value) {
         return fail('Unable to connect to the server.')
       }
-      return {
-        ...state,
+      return patch({
         download: action.value,
         step: STEPS.UPLOAD,
-      }
+      })
     }
     case 'setUpload': {
       if (!action.value) {
         return fail('Unable to connect to the server.')
       }
-      return {
-        ...state,
+      return patch({
         upload: action.value,
         step: STEPS.FINISH,
-      }
+      })
     }
     default: {
       throw new Error('Unexpected action')

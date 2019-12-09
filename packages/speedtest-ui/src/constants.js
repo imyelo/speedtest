@@ -10,3 +10,14 @@ export const STEPS = keymirror({
   UPLOAD: null,
   FINISH: null,
 })
+
+const CACHE_PREFIX = 'speedtest:'
+export const CACHE_KEYS = (() => {
+  let keys = {
+    HOST: 'host',
+  }
+  for (let name in keys) {
+    keys[name] = `${CACHE_PREFIX}${keys[name]}`
+  }
+  return keys
+})()
