@@ -24,14 +24,14 @@ const STEPS = {
 function useDownload () {
   const download = async ({ host }) => {
     let timing = new Timing()
-    let content = []
+    let size = 0
     const receive = async (reader) => {
       const next = async () => {
         let { done, value } = await reader.read()
         if (done) {
           return
         }
-        content.push(value)
+        size += value.byteLength
         await next()
       }
       await next()
@@ -51,7 +51,6 @@ function useDownload () {
     } finally {
       timing.mark(TIMING_MARKS.CONTENT)
     }
-    const size = content.reduce((memo, bytes) => memo + bytes.byteLength, 0)
     const duration = timing.duration(TIMING_MARKS.RESPONSE, TIMING_MARKS.CONTENT)
     const speed = size / (duration / 1000) // bytes/s
     if (!size) {
