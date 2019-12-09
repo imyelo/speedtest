@@ -8,7 +8,7 @@
     "speedtest": "bin/speedtest"
   },
   "scripts": {
-    "start": "./bin/speedtest --skip-public-ip",
+    "start": "./bin/speedtest --public-ip localhost",
     "test": "ava test/*.js"
   },
   "author": "yelo",
