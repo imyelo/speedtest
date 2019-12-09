@@ -33,14 +33,14 @@ const launch = async (options) => {
     const clientServer = micro(client(meta))
     clientServer.listen(options.get('clientPort'), () => {
       const address = clientServer.address()
-      console.log(`Client server is listening on ${address.port}.`)
+      console.log(`Client server is ready: http://${meta.ip || 'localhost'}:${address.port}`)
     })
   }
 
   const agentServer = micro(agent(meta))
   agentServer.listen(options.get('agentPort'), () => {
     const address = agentServer.address()
-    console.log(`Agent server is listening on ${address.port}.`)
+    console.log(`Agent server is ready:  http://${meta.ip || 'localhost'}:${address.port}`)
   })
 }
 
