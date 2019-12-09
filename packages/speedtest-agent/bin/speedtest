@@ -6,7 +6,7 @@ const pkg = require('../package.json')
 const launch = require('..')
 
 const DEFAULT_AGENT_PORT = 53390
-const DEFAULT_CLIENT_PORT = 80
+const DEFAULT_CLIENT_PORT = 8000
 
 const ARGS = {
   '--help':           Boolean,
