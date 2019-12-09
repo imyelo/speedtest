@@ -3,6 +3,7 @@ import { STEPS } from './constants'
 
 const initialState = {
   step: STEPS.READY,
+  host: '',
   ping: null,
   download: null,
   upload: null,
@@ -10,9 +11,16 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'ready': {
+      return {
+        ...state,
+        step: STEPS.READY,
+      }
+    }
     case 'start': {
       return {
         ...state,
+        host: action.host,
         step: STEPS.PING,
       }
     }

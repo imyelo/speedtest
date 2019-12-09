@@ -5,7 +5,7 @@ import { useContextReducer } from './reducer'
 const Result = () => {
   const [ state, dispatch ] = useContextReducer()
 
-  const onClickButton = () => dispatch({ type: 'start' })
+  const onClickButton = () => dispatch({ type: 'ready' })
 
   return (
     <div className="screen">

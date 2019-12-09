@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import keymirror from 'keymirror'
 import Debug from 'debug'
+import olt from 'olt'
 import Timing from './common/timing'
 import { useContextReducer } from './reducer'
 
@@ -9,7 +10,7 @@ const debug = Debug('speedtest:upload')
 const UPLOAD_SIZE = 20 * 1024 * 1024 // 50mb
 const UPLOAD_TIMEOUT = 20 * 1000 // 20s
 
-const UPLOAD_ENDPOING = 'http://localhost:3001/upload'
+const UPLOAD_ENDPOING = 'http://${host}/upload'
 
 const TIMING_MARKS = keymirror({
   START: null,
@@ -29,14 +30,14 @@ const post = async ({ url, body, timeout, onProgress }) => {
 }
 
 function useUpload () {
-  const upload = async () => {
+  const upload = async ({ host }) => {
     let timing = new Timing()
     let size
     try {
       const payload = new Uint8Array(UPLOAD_SIZE)
       timing.mark(TIMING_MARKS.START)
       await post({
-        url: UPLOAD_ENDPOING,
+        url: olt(UPLOAD_ENDPOING)({ host }),
         body: payload.buffer,
         timeout: UPLOAD_TIMEOUT,
         onProgress (event) {
@@ -70,12 +71,12 @@ function useUpload () {
 }
 
 const Upload = () => {
-  const [ , dispatch ] = useContextReducer()
+  const [ state, dispatch ] = useContextReducer()
   const { upload } = useUpload()
 
   useEffect(() => {
     ;(async () => {
-      let result = await upload()
+      let result = await upload({ host: state.host })
       dispatch({ type: 'setUpload', value: result.speed })
     })()
   }, [])

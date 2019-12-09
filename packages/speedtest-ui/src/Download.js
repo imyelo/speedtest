@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import keymirror from 'keymirror'
 import pTimeout from 'p-timeout'
+import olt from 'olt'
 import Timing from './common/timing'
 import { useContextReducer } from './reducer'
 
 const DOWNLOAD_RESPONSE_TIMEOUT = 5 * 1000 // 5s
 const DOWNLOAD_CONTENT_TIMEOUT = 20 * 1000 // 20s
 
-const DOWNLOAD_ENDPOING = 'http://localhost:3001/download'
+const DOWNLOAD_ENDPOING = 'http://${host}/download'
 
 const TIMING_MARKS = keymirror({
   REQUEST: null,
@@ -21,7 +22,7 @@ const STEPS = {
 }
 
 function useDownload () {
-  const download = async () => {
+  const download = async ({ host }) => {
     let timing = new Timing()
     let content = []
     const receive = async (reader) => {
@@ -40,7 +41,7 @@ function useDownload () {
       const controller = new AbortController()
       const signal = controller.signal
       timing.mark(TIMING_MARKS.REQUEST)
-      const response = await pTimeout(fetch(DOWNLOAD_ENDPOING, {
+      const response = await pTimeout(fetch(olt(DOWNLOAD_ENDPOING)({ host }), {
         signal,
       }), DOWNLOAD_RESPONSE_TIMEOUT, () => controller.abort())
       timing.mark(TIMING_MARKS.RESPONSE)
@@ -73,12 +74,12 @@ function useDownload () {
 }
 
 const Download = () => {
-  const [ , dispatch ] = useContextReducer()
+  const [ state, dispatch ] = useContextReducer()
   const { download } = useDownload()
 
   useEffect(() => {
     ;(async () => {
-      let result = await download()
+      let result = await download({ host: state.host })
       dispatch({ type: 'setDownload', value: result.speed })
     })()
   }, [])

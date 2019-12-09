@@ -13,7 +13,15 @@ const App = () => {
   const [ state, dispatch ] = useContextReducer()
   const { step } = state
 
-  const onClick = () => dispatch({ type: 'start' })
+  const onSubmit = (event) => {
+    event.preventDefault()
+    const form = new FormData(event.target)
+    const host = form.get('host')
+    dispatch({
+      type: 'start',
+      host,
+    })
+  }
 
   const isTesting = step !== STEPS.READY
 
@@ -24,9 +32,18 @@ const App = () => {
         <div className={classnames('screen', { testing: isTesting })} key="control">
           <div className="control">
             <h1>Speed Test</h1>
-            <button className="primary-button" onClick={onClick} disabled={isTesting}>
-              { isTesting ? 'Testing...' : 'Start' }
-            </button>
+            <form className="form" onSubmit={onSubmit}>
+              <input
+                className="host"
+                name="host"
+                autoComplete="off"
+                defaultValue={state.host}
+                placeholder="Agent IP:PORT"
+                disabled={isTesting} />
+              <button className="primary-button" type="submit" disabled={isTesting}>
+                { isTesting ? 'Testing...' : 'Start' }
+              </button>
+            </form>
           </div>
           {
             isTesting
