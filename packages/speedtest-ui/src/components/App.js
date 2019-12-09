@@ -60,6 +60,15 @@ const App = () => {
                 </div>
               : null
           }
+          <Animate transitionName="transition-error">
+            {
+              state.error
+                ? <div className="error">
+                  {state.error}
+                </div>
+                : null
+            }
+          </Animate>
         </div>
       )
       : <Result key="result" />

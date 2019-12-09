@@ -7,9 +7,16 @@ const initialState = {
   ping: null,
   download: null,
   upload: null,
+  error: null,
 }
 
 const reducer = (state, action) => {
+  const fail = (message) => ({
+    ...state,
+    error: message,
+    step: STEPS.READY,
+  })
+
   switch (action.type) {
     case 'ready': {
       return {
@@ -20,11 +27,15 @@ const reducer = (state, action) => {
     case 'start': {
       return {
         ...state,
+        error: null,
         host: action.host,
         step: STEPS.PING,
       }
     }
     case 'setPing': {
+      if (!action.value) {
+        return fail('Unable to connect to the server.')
+      }
       return {
         ...state,
         ping: action.value,
@@ -32,6 +43,9 @@ const reducer = (state, action) => {
       }
     }
     case 'setDownload': {
+      if (!action.value) {
+        return fail('Unable to connect to the server.')
+      }
       return {
         ...state,
         download: action.value,
@@ -39,6 +53,9 @@ const reducer = (state, action) => {
       }
     }
     case 'setUpload': {
+      if (!action.value) {
+        return fail('Unable to connect to the server.')
+      }
       return {
         ...state,
         upload: action.value,
