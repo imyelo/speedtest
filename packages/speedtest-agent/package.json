@@ -8,7 +8,7 @@
     "speedtest": "src/index.js"
   },
   "scripts": {
-    "start": "node .",
+    "start": "./bin/speedtest --skip-public-ip",
     "test": "ava test/*.js"
   },
   "author": "yelo",
@@ -25,6 +25,8 @@
     "ava": "^2.1.0"
   },
   "dependencies": {
+    "arg": "^4.1.2",
+    "get-port": "^5.0.0",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "noop-stream": "^0.1.0",

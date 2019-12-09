@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+const arg = require('arg')
+const getPort = require('get-port')
+const pkg = require('../package.json')
+const launch = require('..')
+
+const DEFAULT_AGENT_PORT = 3001
+const DEFAULT_CLIENT_PORT = 3000
+
+const ARGS = {
+  '--help':           Boolean,
+  '--version':        Boolean,
+  '--skip-public-ip': Boolean,
+  '--public-ip':      String,
+  '--agent-only':     Boolean,
+  '--agent-port':     Number,
+  '--client-port':    Number,
+  '-i':               '--public-ip',
+  '-a':               '--agent-port',
+  '-c':               '--client-port',
+}
+
+const HELP = `
+Available Arguments:
+  ${Object.keys(ARGS).join('\n  ')}
+`
+
+const main = async () => {
+  try {
+    const args = arg(ARGS)
+
+    if (args['--help']) {
+      console.log(HELP)
+      return
+    }
+
+    if (args['--version']) {
+      console.log(pkg.version)
+      return
+    }
+
+    const options = new Map()
+    options.set('agentOnly', !!args['--agent-only'])
+    options.set('publicIp', args['--public-ip'] || (!options.agentOnly && !args['--skip-public-ip']))
+    options.set('agentPort', args['--agent-port'] || await getPort({ port: DEFAULT_AGENT_PORT }))
+    options.set('clientPort', args['--client-port'] || await getPort({ port: DEFAULT_CLIENT_PORT }))
+
+    console.log('Launching servers...')
+    await launch(options)
+  } catch (err) {
+    if (err.code === 'ARG_UNKNOWN_OPTION') {
+      console.log(err.message);
+    } else {
+      throw err;
+    }
+  }
+}
+
+main()

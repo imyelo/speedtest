@@ -3,48 +3,43 @@ const publicIp = require('public-ip')
 const client = require('./client')
 const agent = require('./agent')
 
-const DEFAULT_PUBLIC_IP = '127.0.0.1'
-const DEFAULT_AGENT_PORT = 3001
-const DEFAULT_CLIENT_PORT = 3000
-
-const getMeta = async () => {
-  let ip
-  if (DEFAULT_PUBLIC_IP === true) {
+const getIp = async (options) => {
+  const option = options.get('publicIp')
+  if (option === true) {
     try {
-      ip = await publicIp.v4({ onlyHttps: true })
+      return await publicIp.v4({ onlyHttps: true })
     } catch (error) {
       console.error(error)
     }
-  } else if (DEFAULT_PUBLIC_IP) {
-    ip = DEFAULT_PUBLIC_IP
+  } else if (option) {
+    return option
   }
-
-  const meta = {
-    ip,
-    agentPort: DEFAULT_AGENT_PORT,
-    clientPort: DEFAULT_CLIENT_PORT,
-  }
-  return meta
+  return null
 }
 
-const launch = async () => {
-  const meta = await getMeta()
+const getMeta = async (options) => {
+  let ip = await getIp(options)
+  return {
+    ip,
+    clientPort: options.get('clientPort'),
+    agentPort: options.get('agentPort'),
+  }
+}
+
+const launch = async (options) => {
+  const meta = await getMeta(options)
 
   const clientServer = micro(client(meta))
   const agentServer = micro(agent(meta))
 
-  clientServer.listen(DEFAULT_CLIENT_PORT, () => {
+  clientServer.listen(options.get('clientPort'), () => {
     const address = clientServer.address()
     console.log(`Client server is listening on ${address.port}.`)
   })
-  agentServer.listen(DEFAULT_AGENT_PORT, () => {
+  agentServer.listen(options.get('agentPort'), () => {
     const address = agentServer.address()
     console.log(`Agent server is listening on ${address.port}.`)
   })
 }
 
 module.exports = launch
-
-if (!module.parent) {
-  launch()
-}
