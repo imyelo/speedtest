@@ -1,0 +1,36 @@
+{
+  "name": "speedtest-agent",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "bin": {
+    "speedtest": "src/index.js"
+  },
+  "scripts": {
+    "test": "ava test/*.js"
+  },
+  "author": "yelo",
+  "license": "Apache-2.0",
+  "repository": {
+    "url": "imyelo/speedtest",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/imyelo/speedtest/issues"
+  },
+  "homepage": "https://github.com/imyelo/speedtest#readme",
+  "devDependencies": {
+    "ava": "^2.1.0"
+  },
+  "dependencies": {
+    "micro": "^9.3.4",
+    "micro-cors": "^0.1.1",
+    "noop-stream": "^0.1.0",
+    "serve-handler": "^6.1.2"
+  },
+  "pkg": {
+    "scripts": "src/**/*.js",
+    "assets": "../speedtest-ui/dist/**/*"
+  }
+}

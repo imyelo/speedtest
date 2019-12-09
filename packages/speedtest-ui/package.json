@@ -1,10 +1,21 @@
 {
   "name": "speedtest-ui",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "poi --prod",
     "start": "poi --serve"
   },
+  "author": "yelo",
+  "license": "Apache-2.0",
+  "repository": {
+    "url": "imyelo/speedtest",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/imyelo/speedtest/issues"
+  },
+  "homepage": "https://github.com/imyelo/speedtest#readme",
   "devDependencies": {
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
