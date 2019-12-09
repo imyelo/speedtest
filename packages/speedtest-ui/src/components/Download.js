@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
 import { useContextReducer } from '../store/reducer'
-import useDownload from '../apis/download'
+import download from '../apis/download'
 
 const Download = () => {
   const [ state, dispatch ] = useContextReducer()
-  const { download } = useDownload()
 
   useEffect(() => {
     ;(async () => {

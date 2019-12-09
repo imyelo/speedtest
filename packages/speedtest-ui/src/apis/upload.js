@@ -15,7 +15,7 @@ const TIMING_MARKS = keymirror({
   END: null,
 })
 
-const post = async ({ url, body, timeout, onProgress }) => {
+const request = async ({ url, body, timeout, onProgress }) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
     xhr.onload = (event) => resolve(event)
@@ -28,45 +28,39 @@ const post = async ({ url, body, timeout, onProgress }) => {
   })
 }
 
-function useUpload () {
-  const upload = async ({ host }) => {
-    let timing = new Timing()
-    let size
-    try {
-      const payload = new Uint8Array(UPLOAD_SIZE)
-      timing.mark(TIMING_MARKS.START)
-      await post({
-        url: olt(UPLOAD_ENDPOING)({ host }),
-        body: payload.buffer,
-        timeout: UPLOAD_TIMEOUT,
-        onProgress (event) {
-          size = event.loaded
-        },
-      })
-      size = payload.byteLength
-    } catch (error) {
-      debug(error)
-    }
-    timing.mark(TIMING_MARKS.END)
-    const duration = timing.duration(TIMING_MARKS.START, TIMING_MARKS.END)
-    const speed = size / (duration / 1000) // bytes/s
-    if (!size) {
-      return {
-        size: null,
-        duration: null,
-        speed: null,
-      }
-    }
+const upload = async ({ host }) => {
+  let timing = new Timing()
+  let size
+  try {
+    const payload = new Uint8Array(UPLOAD_SIZE)
+    timing.mark(TIMING_MARKS.START)
+    await request({
+      url: olt(UPLOAD_ENDPOING)({ host }),
+      body: payload.buffer,
+      timeout: UPLOAD_TIMEOUT,
+      onProgress (event) {
+        size = event.loaded
+      },
+    })
+    size = payload.byteLength
+  } catch (error) {
+    debug(error)
+  }
+  timing.mark(TIMING_MARKS.END)
+  const duration = timing.duration(TIMING_MARKS.START, TIMING_MARKS.END)
+  const speed = size / (duration / 1000) // bytes/s
+  if (!size) {
     return {
-      size,
-      duration,
-      speed,
+      size: null,
+      duration: null,
+      speed: null,
     }
   }
-
   return {
-    upload,
+    size,
+    duration,
+    speed,
   }
 }
 
-export default useUpload
+export default upload

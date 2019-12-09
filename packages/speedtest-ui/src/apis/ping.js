@@ -13,44 +13,45 @@ const TIMING_MARKS = keymirror({
   RESPONSE: null,
 })
 
-function usePing () {
-  const request = async ({ host }) => {
-    let timing = new Timing()
-    try {
-      const controller = new AbortController()
-      timing.mark(TIMING_MARKS.REQUEST)
-      await pTimeout(fetch(olt(PING_ENDPOING)({ host }), {
-        signal: controller.signal,
-      }), PING_RESPONSE_TIMEOUT, () => controller.abort())
-      timing.mark(TIMING_MARKS.RESPONSE)
-    } catch (error) {
-      console.error(error)
-      return
-    }
-    return timing.duration(TIMING_MARKS.REQUEST, TIMING_MARKS.RESPONSE)
-  }
+const request = async ({ url, timeout }) => {
+  const controller = new AbortController()
+  return await pTimeout(fetch(url, {
+    signal: controller.signal,
+  }), timeout, () => controller.abort())
+}
 
-  const ping = async ({ host }) => {
-    let durations = []
-    for (let i = 0; i < PING_TIME; i++) {
-      let ms = await request({ host })
-      if (ms) {
-        durations.push(ms)
-      }
+const doPing = async ({ host }) => {
+  let timing = new Timing()
+  try {
+    timing.mark(TIMING_MARKS.REQUEST)
+    await request({
+      url: olt(PING_ENDPOING)({ host }),
+      timeout: PING_RESPONSE_TIMEOUT,
+    })
+    timing.mark(TIMING_MARKS.RESPONSE)
+  } catch (error) {
+    console.error(error)
+    return
+  }
+  return timing.duration(TIMING_MARKS.REQUEST, TIMING_MARKS.RESPONSE)
+}
+
+const ping = async ({ host }) => {
+  let durations = []
+  for (let i = 0; i < PING_TIME; i++) {
+    let ms = await doPing({ host })
+    if (ms) {
+      durations.push(ms)
     }
-    if (!durations.length) {
-      return {
-        duration: null,
-      }
-    }
+  }
+  if (!durations.length) {
     return {
-      duration: durations.reduce((memo, ms) => memo + ms, 0) / durations.length,
+      duration: null,
     }
   }
-
   return {
-    ping,
+    duration: durations.reduce((memo, ms) => memo + ms, 0) / durations.length,
   }
 }
 
-export default usePing
+export default ping

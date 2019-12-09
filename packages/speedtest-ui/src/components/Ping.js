@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
 import { useContextReducer } from '../store/reducer'
-import usePing from '../apis/ping'
+import ping from '../apis/ping'
 
 const Ping = () => {
   const [ state, dispatch ] = useContextReducer()
-  const { ping } = usePing()
 
   useEffect(() => {
     ;(async () => {
