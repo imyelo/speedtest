@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Animate from 'rc-animate'
 import classnames from 'classnames'
 import { useContextReducer, ReducerProvider } from '../store/reducer'
@@ -9,9 +9,36 @@ import Upload from './Upload'
 import Result from './Result'
 import './App.less'
 
+const useAppForm = () => {
+  const [ host, setHost ] = useState('')
+
+  useEffect(() => {
+    ;(async () => {
+      let response = await fetch('/agent.txt')
+      if (!response.ok) {
+        return
+      }
+      let body = await response.text()
+      let host = body.trim()
+      if (!host) {
+        return
+      }
+      setHost(host)
+    })()
+  }, [])
+
+  return [
+    [ host, setHost ],
+  ]
+}
+
 const App = () => {
   const [ state, dispatch ] = useContextReducer()
   const { step } = state
+  const [ [ host, setHost ]] = useAppForm()
+
+  const onChangeHost = (event) =>
+    setHost(event.target.value)
 
   const onSubmit = (event) => {
     event.preventDefault()
@@ -42,8 +69,9 @@ const App = () => {
                 className="host"
                 name="host"
                 autoComplete="off"
-                defaultValue={state.host}
                 placeholder="Agent IP:PORT"
+                value={host}
+                onChange={onChangeHost}
                 disabled={isTesting} />
               <button className="primary-button" type="submit" disabled={isTesting}>
                 { isTesting ? 'Testing...' : 'Start' }

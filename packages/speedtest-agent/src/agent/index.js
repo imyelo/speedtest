@@ -9,7 +9,7 @@ const routes = [
 
 const notfound = (req, res) => send(res, 404, 'not found')
 
-module.exports = cors(async (req, res) => {
+module.exports = () => cors(async (req, res) => {
   if (req.method === 'OPTIONS') {
     return send(res, 200, 'OK')
   }

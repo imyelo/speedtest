@@ -3,7 +3,7 @@ import { STEPS } from '../constants'
 
 const initialState = {
   step: STEPS.READY,
-  host: '127.0.0.1:3001',
+  host: '',
   ping: null,
   download: null,
   upload: null,
@@ -30,6 +30,12 @@ const reducer = (state, action) => {
         error: null,
         host: action.host,
         step: STEPS.PING,
+      }
+    }
+    case 'setHost': {
+      return {
+        ...state,
+        ping: action.value,
       }
     }
     case 'setPing': {
