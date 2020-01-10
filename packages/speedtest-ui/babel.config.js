@@ -1,8 +1,8 @@
 module.exports = {
   presets: [
-    'poi/babel'
+    'poi/babel',
   ],
   plugins: [
-    'react-hot-loader/babel'
-  ]
+    'react-hot-loader/babel',
+  ],
 }
